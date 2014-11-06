@@ -3,6 +3,10 @@ module Math.Group.Permutation where
 
 import qualified Data.Map.Strict as M
 import qualified Data.Set as S
+import Data.List (find)
+import Data.Maybe (isJust)
+import Data.Graph.Inductive.Tree (Gr)
+import qualified Data.Graph.Inductive as G
 import Data.List (nub)
 import Prelude hiding (lookup, negate)
 import Data.Tuple (swap)
@@ -24,9 +28,10 @@ instance (Show a) => Show (Permutation a) where
 permutation :: (Ord a) => Cycle a -> Permutation a
 permutation [] = zero
 permutation [a] = zero
-permutation (a:as) = P $ permutation' a (a:as)
+permutation (a:as) = P $ clean $ permutation' a (a:as)
  where permutation' first [a] = M.singleton a first
        permutation' first (a:b:as) = M.insert a b $ permutation' first (b:as)
+       clean = M.filterWithKey (/=)
 
 
 -- when we look up an element, if it wasn't in the permutation explicitly,
@@ -36,8 +41,9 @@ lookup a (P p) = M.findWithDefault a a p
 
 
 compose :: (Ord a) => Permutation a -> Permutation a -> Permutation a
-pa@(P a) `compose` pb@(P b) = P $ M.union x a
+pa@(P a) `compose` pb@(P b) = P $ clean $ M.union x a
  where x = M.map (flip lookup pa) b
+       clean = M.filterWithKey (/=)
 
 
 negate :: (Ord a) => Permutation a -> Permutation a
@@ -47,15 +53,57 @@ negate (P a) = P . M.fromList . Prelude.map swap . M.toList $ a
 zero :: (Ord a) => Permutation a
 zero = P M.empty
 
-orbit :: (Ord a) => Permutation a -> S.Set (Permutation a) -> S.Set (Permutation a)
+--
+-- Orbit Calculation
+--
+
+orbit :: (Ord a) => a -> S.Set (Permutation a) -> S.Set a
 orbit g generators = S.fromList $ orbit' (S.toList generators) [g]
 
 orbit' gens set
   | S.fromList new == S.fromList set = set
   | otherwise  = orbit' gens $ nub (set ++ new)
- where new = step gens set
+ where new = nub [lookup y x | x <- gens, y <- set]
 
-step gens set = nub [y `compose` x | x <- gens, y <- set]
+--
+-- Schreier Tree Construction
+--
+schreierTree
+  :: (Enum a, Ord a) =>
+       a -> S.Set (Permutation a) -> Gr a (Permutation a)
+schreierTree a gens = tree gens [a] $ G.insNode (fromEnum a, a) G.empty
+
+tree _ [] t = t
+tree gens as t = tree gens as' t'
+ where (as', t') = foldl (applyGens gens) ([],t) as
+
+applyGens gens newAndTree n = S.foldl (addNode n) newAndTree gens
+
+addNode n (ns,t) perm = if (fromEnum n') `G.gelem` t
+                          then (ns,t)
+                          else (ns ++ [n'], newT)
+ where n' = lookup n perm
+       nd n = (fromEnum n, n)
+       newT = G.insEdge (fromEnum n', fromEnum n, perm) . G.insEdge (fromEnum n, fromEnum n', perm) . G.insNode (nd n') $ t
+
+isEdge t i b ib = isJust $ find match es
+ where es = G.labEdges t
+       match (a,b,_) = (e i == a && e ib == b) || (e ib == a && e i == b)
+       e n = fromEnum n
+
+path t a n = foldl (compose) zero . map snd . tail $ ns
+ where G.LP ns = G.lesp a n t
+
+--
+-- Stabilizer calculation
+--
+stabilizer a gens = foldl checkAdd S.empty l
+ where l = [ (i, b, lookup i b) | b <- S.toList gens, i <- S.toList (orbit a gens)]
+       checkAdd s (i,b,ib) = if isEdge t i b ib
+                               then s
+                               else S.insert (e i b ib) s
+       e i b ib = path t a i `compose` b `compose` negate (path t a ib)
+       t = schreierTree a gens
 
 -- generators for the symmetric group of order n
 sym 1 = S.singleton zero
