@@ -43,7 +43,7 @@ lookup :: (Ord a) => a -> Permutation a -> a
 lookup a (P p) = M.findWithDefault a a p
 
 fixedBy :: (Ord a) => a -> Permutation a -> Bool
-a `fixedBy` p = lookup p a == a
+a `fixedBy` p = lookup a p == a
 
 allFixes :: (Ord a) => S.Set (Permutation a) -> a -> Bool
 allFixes ps a = any (not . fixedBy a) $ S.toList ps
