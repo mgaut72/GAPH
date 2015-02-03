@@ -26,7 +26,8 @@ library
   -- other-modules:       
   -- other-extensions:    
   build-depends:       base >=4.6 && <4.7, containers >=0.5 && <0.6, fgl,
-                       HaskellForMaths >= 0.4.4, lens
+                       HaskellForMaths >= 0.4.4, lens, random
+
   hs-source-dirs:      src
   default-language:    Haskell2010
 

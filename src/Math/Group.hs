@@ -31,7 +31,7 @@ class Group a => GroupAction a b where
   action :: a -> b -> b
 
 instance Ord a => GroupAction (P.Permutation a) a where
-  action = P.lookup
+  action = flip P.lookup
 
 instance (Eq a, Num a, Fractional a) => GroupAction (M.Matrix a) (M.Vector a) where
   action = (L.<<*>)
