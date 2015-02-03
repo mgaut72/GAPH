@@ -1,0 +1,69 @@
+\documentclass{article}
+\usepackage{amsthm,amsfonts,mathtools, amssymb}
+\usepackage{enumerate}
+\usepackage{outlines}
+\usepackage{changepage}
+\textwidth=6.25in
+\textheight=9.5in
+\headheight=0in
+\headsep=.5in
+\hoffset  -1in
+\topmargin -.75in
+
+\nofiles
+
+\setlength{\parskip}{0.0cm}
+\setlength{\parindent}{0.0cm}   % Don't indent the paragraphs
+
+% \begin{adjustwidth}{2em}{0pt}
+% \end{adjustwidth}
+
+\begin{document}
+% \begin{flushright}
+%     Matt Gautreau\\
+%     Math 443\\
+%     Due:\\
+% \end{flushright}
+
+\begin{outline}
+    \1 Introduction
+    \1 Group theory basics
+        \2 Group Definition
+        \2 Group Actions
+            \3 Orbit
+            \3 Stabilizer
+    \1 fundamental concepts of computational group theory
+        \2 Algorithms need to be described imperitavly, but must be mathematically valid.
+        \2 generating set
+        \2 orbit calculations
+        \2 Schreier trees
+        \2 Stabilizer Calculation
+        \2 Schreir-Sims \& Basis and Strong Generating Sets
+        \2 differences for matrices
+    \1 Haskell algorithm implementations
+        \2 Explanation of Data Structures used
+        \2 Group and GroupAction typeclasses
+            \3 instances for permutations, matrices
+        \2 Performance Analysis
+            \3 time tables
+            \3 Test cases?
+                \4 Difficult / computational enough
+                \4 symmetric groups are usually hardest - GAP usually specializes for these
+        \2 Code snipets(?)
+            \3 type signatures
+            \3 typeclass \& type constrains
+                \4 laws not enforacble by haskell
+            \3 important functions (fold ruduction functions in schreir trees, etc)
+        \2 Difficulties
+    \1 Other implementations
+        \2 simply need to mention they exist, if that
+        \2 GAP
+            \3 unless used for verification, might be able to be left out
+        \2 HaskellForMaths
+            \3 comment on any inspiration, use, etc
+            \3 overlapping functionality, differences in implementation between the overlap
+\end{outline}
+
+
+
+\end{document}
