@@ -19,13 +19,14 @@ library
   exposed-modules:
     Math.Group
     Math.Group.Matrix
+    Math.Group.MeatAxe
     Math.Group.Orbit
     Math.Group.Stabilizer
     Math.Group.Permutation
     Math.Group.SchreierSims
   -- other-modules:       
   -- other-extensions:    
-  build-depends:       base >=4.6 && <4.7, containers >=0.5 && <0.6, fgl,
+  build-depends:       base >=4.6 && <4.7, containers >=0.5.5 && <0.6, fgl,
                        HaskellForMaths >= 0.4.4, lens, random
 
   hs-source-dirs:      src
