@@ -26,7 +26,7 @@ library
     Math.Group.SchreierSims
   -- other-modules:       
   -- other-extensions:    
-  build-depends:       base >=4.6 && <4.7, containers >=0.5.5 && <0.6, fgl,
+  build-depends:       base >=4.6, containers >=0.5.5 && <0.6, fgl,
                        HaskellForMaths >= 0.4.4, lens, random
 
   hs-source-dirs:      src
@@ -36,10 +36,10 @@ test-suite orbit
   hs-source-dirs:      test
   main-is:             Orbit.hs
   type:                exitcode-stdio-1.0
-  build-depends:       base >= 4 && < 5, HUnit, algebra , containers
+  build-depends:       base >= 4 && < 5, HUnit, gaph, containers
 
 test-suite stabilizer
   hs-source-dirs:      test
   main-is:             Stabilizer.hs
   type:                exitcode-stdio-1.0
-  build-depends:       base >= 4 && < 5, HUnit, algebra , containers
+  build-depends:       base >= 4 && < 5, HUnit, gaph , containers
